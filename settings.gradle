@@ -3,8 +3,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
         jcenter() // Warning: this repository is going to shut down soon
     }
 }
 rootProject.name = "TIM-Example-Android"
 include ':app'
+
+include ':TIM-Android'
+project(':TIM-Android').projectDir = new File('../TIM-Android/TIM-Android-lib')

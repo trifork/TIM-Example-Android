@@ -2,7 +2,6 @@ package com.trifork.timandroid.welcome
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -50,6 +49,22 @@ class WelcomeFragment : Fragment() {
         return binding?.root
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_AUTH) {
+            if(data != null) {
+                lifecycleScope.launch {
+                    val loginResult = tim.auth.handleOpenIDConnectLoginResult(scope, data).await()
+
+                    when (loginResult) {
+                        is TIMResult.Success -> navigateToCreateNewPinCodeFragment()
+                        is TIMResult.Failure -> Toast.makeText(activity, "Failed to handle loginResult", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
     private fun login() {
         lifecycleScope.launch {
             val intentResult = tim.auth.getOpenIDConnectLoginIntent(scope).await()
@@ -62,25 +77,9 @@ class WelcomeFragment : Fragment() {
         }
     }
 
-    private fun navigateToCreateNewPunCodeFragment() {
+    private fun navigateToCreateNewPinCodeFragment() {
         lifecycleScope.launchWhenResumed {
             findNavController().navigate(R.id.action_fragment_welcome_to_fragment_create_new_pin_code, null)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_AUTH) {
-            if(data != null) {
-                lifecycleScope.launch {
-                    val loginResult = tim.auth.handleOpenIDConnectLoginResult(scope, data).await()
-
-                    when (loginResult) {
-                        is TIMResult.Success -> navigateToCreateNewPunCodeFragment()
-                        is TIMResult.Failure -> Toast.makeText(activity, "Failed to handle loginResult", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
         }
     }
 }

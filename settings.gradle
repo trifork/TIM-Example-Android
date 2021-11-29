@@ -12,3 +12,7 @@ include ':app'
 
 include ':TIM-Android'
 project(':TIM-Android').projectDir = new File('../TIM-Android/TIM-Android-lib')
+
+//TODO(This include is necessary for TIM-Android)
+include ':TIMEncryptedStorage-Android'
+project(':TIMEncryptedStorage-Android').projectDir = new File('../TIMEncryptedStorage-Android/library')

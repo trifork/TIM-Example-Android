@@ -18,6 +18,10 @@
         android:id="@+id/fragment_create_new_pin_code"
         android:name="com.trifork.timandroid.createnewpincode.CreateNewPinCodeFragment"
         android:label="@string/fragment_create_new_pin_code"
-        tools:layout="@layout/fragment_create_new_pin_code" />
+        tools:layout="@layout/fragment_create_new_pin_code" >
+        <action
+            android:id="@+id/action_fragment_create_new_pin_code_to_fragment_welcome"
+            app:destination="@id/fragment_welcome" />
+    </fragment>
 
 </navigation>

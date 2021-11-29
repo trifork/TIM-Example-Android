@@ -6,11 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentCreateNewPinCodeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,19 +46,39 @@ class CreateNewPinCodeFragment : Fragment() {
 
     private fun initListeners() {
         lifecycleScope.launch {
-            viewModel?.isSubmitEnabled?.collect {
+            viewModel.isSubmitEnabled.collect {
                 binding?.buttonSave?.isEnabled = it
-            }
-
-            binding?.textInputEditTextUserName?.addTextChangedListener {
-                viewModel?.onNameChange(it.toString())
-            }
-
-            binding?.textInputEditTextUserPin?.addTextChangedListener {
-                viewModel?.onPinChange(it.toString())
             }
         }
 
+        binding?.buttonSave?.setOnClickListener {
+            viewModel.storeRefreshToken()
+        }
+
+        binding?.textInputEditTextUserName?.addTextChangedListener {
+            viewModel.onNameChange(it.toString())
+        }
+
+        binding?.textInputEditTextUserPin?.addTextChangedListener {
+            viewModel.onPinChange(it.toString())
+        }
+
+        viewModel.eventsFlow
+            .flowWithLifecycle(lifecycle = viewLifecycleOwner.lifecycle, minActiveState = Lifecycle.State.STARTED)
+            .onEach {
+                when(it) {
+                    is CreateNewPinCodeViewModel.Event.NavigateToLogin -> navigateToLoginFragment()
+                }
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
+
+    private fun navigateToLoginFragment() {
+        lifecycleScope.launchWhenResumed {
+            findNavController().navigate(R.id.action_fragment_create_new_pin_code_to_fragment_welcome, null)
+        }
+    }
+
+
 
 }

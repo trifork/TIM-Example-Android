@@ -2,6 +2,7 @@ package com.trifork.timandroid.welcome
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentWelcomeBinding
@@ -19,10 +21,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class WelcomeFragment : Fragment() {
+class WelcomeFragment : Fragment(), UserLoginAdapter.UserLoginAdapterClickListener {
 
     @Inject
     lateinit var viewModel: WelcomeViewModel
+
+    private val userLoginAdapter = UserLoginAdapter(this)
 
     private var binding: FragmentWelcomeBinding? = null
 
@@ -45,6 +49,11 @@ class WelcomeFragment : Fragment() {
         binding?.buttonLogin?.setOnClickListener {
             login()
         }
+
+        userLoginAdapter.userLogins = tim.storage.availableUserIds.toMutableList()
+
+        binding?.recyclerView?.adapter = userLoginAdapter
+        binding?.recyclerView?.layoutManager = LinearLayoutManager(context)
 
         return binding?.root
     }
@@ -81,5 +90,9 @@ class WelcomeFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             findNavController().navigate(R.id.action_fragment_welcome_to_fragment_create_new_pin_code, null)
         }
+    }
+
+    override fun userLoginClick(item: String) {
+        Log.d(TAG, "userLoginClick $item")
     }
 }

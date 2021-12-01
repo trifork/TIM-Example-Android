@@ -64,7 +64,7 @@ class CreateNewPinCodeFragment : Fragment() {
         }
 
         viewModel.eventsFlow
-            .flowWithLifecycle(lifecycle = viewLifecycleOwner.lifecycle, minActiveState = Lifecycle.State.STARTED)
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
             .onEach {
                 when(it) {
                     is CreateNewPinCodeViewModel.Event.NavigateToLogin -> navigateToLoginFragment()

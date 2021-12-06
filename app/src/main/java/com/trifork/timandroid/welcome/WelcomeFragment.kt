@@ -92,7 +92,14 @@ class WelcomeFragment : Fragment(), UserLoginAdapter.UserLoginAdapterClickListen
         }
     }
 
+    private fun navigateToLoginFragment(userId: String) {
+        lifecycleScope.launchWhenResumed {
+            val action = WelcomeFragmentDirections.actionFragmentWelcomeToFragmentLogin(userId)
+            findNavController().navigate(action)
+        }
+    }
+
     override fun userLoginClick(item: String) {
-        Log.d(TAG, "userLoginClick $item")
+        navigateToLoginFragment(item)
     }
 }

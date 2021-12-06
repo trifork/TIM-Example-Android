@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     app:startDestination="@id/fragment_welcome">
 
     <fragment
         android:id="@+id/fragment_welcome"
         android:name="com.trifork.timandroid.welcome.WelcomeFragment"
         android:label="@string/fragment_welcome"
-        tools:layout="@layout/fragment_welcome" >
+        tools:layout="@layout/fragment_welcome">
         <action
             android:id="@+id/action_fragment_welcome_to_fragment_create_new_pin_code"
             app:destination="@id/fragment_create_new_pin_code" />
+        <action
+            android:id="@+id/action_fragment_welcome_to_fragment_login"
+            app:destination="@id/fragment_login">
+            <argument
+                android:name="userId"
+                app:argType="string" />
+        </action>
+
     </fragment>
 
     <fragment
         android:id="@+id/fragment_create_new_pin_code"
         android:name="com.trifork.timandroid.createnewpincode.CreateNewPinCodeFragment"
         android:label="@string/fragment_create_new_pin_code"
-        tools:layout="@layout/fragment_create_new_pin_code" >
+        tools:layout="@layout/fragment_create_new_pin_code">
         <action
             android:id="@+id/action_fragment_create_new_pin_code_to_fragment_welcome"
             app:destination="@id/fragment_welcome" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_login"
+        android:name="com.trifork.timandroid.login.LoginFragment"
+        android:label="@string/fragment_login" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
     </fragment>
 
 </navigation>

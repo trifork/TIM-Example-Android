@@ -15,4 +15,9 @@
     <string name="fragment_welcome_text_view_login">Login</string>
     <string name="button_login">New user on this device</string>
 
+    <!-- fragment_login -->
+    <string name="fragment_login">Login</string>
+    <string name="fragment_login_text_input_layout_user_pin">PIN</string>
+    <string name="fragment_login_button_login">Login</string>
+
 </resources>

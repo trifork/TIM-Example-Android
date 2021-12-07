@@ -20,4 +20,19 @@
     <string name="fragment_login_text_input_layout_user_pin">PIN</string>
     <string name="fragment_login_button_login">Login</string>
 
+    <!-- fragment_authenticated -->
+    <string name="fragment_authenticated">Authenticated</string>
+    <string name="fragment_authenticated_text_view_user_name">Hello %1</string>
+    <string name="fragment_authenticated_message">You have successfully logged in with either PIN code or Biometric ID! 🥳</string>
+    <string name="fragment_authenticated_text_view_active_tokens">Active tokens</string>
+    <string name="fragment_authenticated_button_access_token">Access Token </string>
+    <string name="fragment_authenticated_button_refresh_token">Refresh Token </string>
+    <string name="fragment_authenticated_text_view_biometric_settings">Biometric settings</string>
+    <string name="fragment_authenticated_text_view_biometric_not_available">Biometric login is not available on this device.</string>
+    <string name="fragment_authenticated_text_view_user_data">User data</string>
+    <string name="fragment_authenticated_text_view_user_id">UserId %1</string>
+    <string name="fragment_authenticated_text_view_exit">Exit</string>
+    <string name="fragment_authenticated_button_log_out">🚪 Log out</string>
+    <string name="fragment_authenticated_button_delete_user">❗ Delete user from this device</string>
+
 </resources>

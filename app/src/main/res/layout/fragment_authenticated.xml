@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/user_name"
+        style="?attr/textAppearanceHeadline5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_authenticated_text_view_user_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/fragment_authenticated_message"
+        style="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_authenticated_message"
+        app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
+    <TextView
+        android:id="@+id/text_view_active_tokens"
+        style="?attr/textAllCaps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/fragment_authenticated_text_view_active_tokens"
+        android:textAllCaps="true"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_authenticated_message" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_access_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_authenticated_button_access_token"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_active_tokens" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_refresh_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_authenticated_button_refresh_token"
+        app:layout_constraintTop_toBottomOf="@+id/button_access_token" />
+
+    <TextView
+        android:id="@+id/text_view_biometric"
+        style="?attr/textAllCaps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/fragment_authenticated_text_view_biometric_settings"
+        android:textAllCaps="true"
+        app:layout_constraintTop_toBottomOf="@+id/button_refresh_token" />
+
+    <TextView
+        android:id="@+id/text_view_biometric_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_authenticated_text_view_biometric_not_available"
+        style="?attr/textAppearanceBody1"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_biometric" />
+
+    <TextView
+        android:id="@+id/text_view_user_data"
+        style="?attr/textAllCaps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/fragment_authenticated_text_view_user_data"
+        android:textAllCaps="true"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_biometric_settings" />
+
+    <TextView
+        android:id="@+id/text_view_user_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_user_data"
+        style="?attr/textAppearanceBody1"
+        android:text="@string/fragment_authenticated_text_view_user_id"
+    />
+
+    <TextView
+        android:id="@+id/text_view_exit"
+        style="?attr/textAllCaps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/fragment_authenticated_text_view_exit"
+        android:textAllCaps="true"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_user_id" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_log_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_authenticated_button_log_out"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_exit" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_authenticated_button_delete_user"
+        app:layout_constraintTop_toBottomOf="@+id/button_log_out" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

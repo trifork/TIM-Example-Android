@@ -34,10 +34,32 @@
     <fragment
         android:id="@+id/fragment_login"
         android:name="com.trifork.timandroid.login.LoginFragment"
-        android:label="@string/fragment_login" >
+        android:label="@string/fragment_login">
         <argument
             android:name="userId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_fragment_login_to_fragment_authenticated"
+            app:destination="@id/fragment_authenticated">
+            <argument
+                android:name="userId"
+                app:argType="string" />
+        </action>
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_authenticated"
+        android:name="com.trifork.timandroid.authenticated.AuthenticatedFragment"
+        android:label="AuthenticatedFragment">
+
+        <argument
+            android:name="userId"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_fragment_authenticated_to_fragment_welcome"
+            app:destination="@id/fragment_welcome" />
+
     </fragment>
 
 </navigation>

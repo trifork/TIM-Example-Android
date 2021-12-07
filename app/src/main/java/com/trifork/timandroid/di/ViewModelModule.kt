@@ -1,6 +1,7 @@
 package com.trifork.timandroid.di
 
 import com.trifork.timandroid.TIM
+import com.trifork.timandroid.authenticated.AuthenticatedViewModel
 import com.trifork.timandroid.createnewpincode.CreateNewPinCodeViewModel
 import com.trifork.timandroid.login.LoginViewModel
 import com.trifork.timandroid.welcome.WelcomeViewModel
@@ -23,4 +24,7 @@ class ViewModelModule {
 
     @Provides
     fun provideWelcomeViewModel(): WelcomeViewModel = WelcomeViewModel()
+
+    @Provides
+    fun provideAuthenticatedViewModel(tim: TIM): AuthenticatedViewModel = AuthenticatedViewModel(tim, GlobalScope)
 }

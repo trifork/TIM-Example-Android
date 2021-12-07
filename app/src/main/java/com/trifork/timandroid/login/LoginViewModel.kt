@@ -1,9 +1,10 @@
 package com.trifork.timandroid.login
 
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trifork.timandroid.TIM
+import com.trifork.timencryptedstorage.models.TIMResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -19,6 +20,7 @@ class LoginViewModel @Inject constructor(
 
     sealed class Event {
         object NavigateToMain : Event()
+        object NavigateToLogin: Event()
     }
 
     private val eventChannel = Channel<Event>(Channel.BUFFERED)
@@ -35,15 +37,21 @@ class LoginViewModel @Inject constructor(
         _userId.value = text
     }
 
-    val isSubmitEnabled: Flow<Boolean> =  _pinCode.map {
-        it.length >=4
+    val userId: StateFlow<String>
+        get() = _userId
+
+    val isSubmitEnabled: Flow<Boolean> = _pinCode.map {
+        it.length >= 4
     }
 
     fun login() = viewModelScope.launch {
 
         val result = tim.auth.loginWithPassword(scope, _userId.value, _pinCode.value, true).await()
 
-        Log.d("LoginViewModel", "result ${result.toString()}")
+        when (result) {
+            is TIMResult.Failure -> TODO()
+            is TIMResult.Success -> eventChannel.send(Event.NavigateToLogin)
+        }
 
     }
 

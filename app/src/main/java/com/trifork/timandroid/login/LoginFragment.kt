@@ -9,9 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentLoginBinding
+import com.trifork.timandroid.welcome.WelcomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
@@ -67,6 +70,7 @@ class LoginFragment : Fragment() {
             .onEach {
                 when (it) {
                     is LoginViewModel.Event.NavigateToMain -> navigateToMain()
+                    LoginViewModel.Event.NavigateToLogin -> navigateToAuthenticated()
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -75,6 +79,13 @@ class LoginFragment : Fragment() {
     private fun navigateToMain() {
         lifecycleScope.launchWhenResumed {
             //findNavController().navigate(R.id.action_, null)
+        }
+    }
+
+    private fun navigateToAuthenticated() {
+        lifecycleScope.launchWhenResumed {
+            val action = LoginFragmentDirections.actionFragmentLoginToFragmentAuthenticated(viewModel.userId.value)
+            findNavController().navigate(action)
         }
     }
 }

@@ -13,7 +13,10 @@ import androidx.navigation.fragment.navArgs
 import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentAuthenticatedBinding
+import com.trifork.timandroid.helpers.JWT
 import com.trifork.timandroid.login.LoginFragmentArgs
+import com.trifork.timandroid.login.LoginFragmentDirections
+import com.trifork.timandroid.token.TokenType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -52,11 +55,11 @@ class AuthenticatedFragment : Fragment() {
 
     private fun initListeners() {
         binding?.buttonAccessToken?.setOnClickListener {
-
+            navigateToTokenFragment(TokenType.Access)
         }
 
         binding?.buttonRefreshToken?.setOnClickListener {
-
+            navigateToTokenFragment(TokenType.Refresh)
         }
 
         binding?.buttonLogOut?.setOnClickListener {
@@ -83,5 +86,11 @@ class AuthenticatedFragment : Fragment() {
         }
     }
 
+    private fun navigateToTokenFragment(tokenType: TokenType) {
+        lifecycleScope.launchWhenResumed {
+            val action = AuthenticatedFragmentDirections.actionFragmentAuthenticatedToFragmentToken(tokenType)
+            findNavController().navigate(action)
+        }
+    }
 
 }

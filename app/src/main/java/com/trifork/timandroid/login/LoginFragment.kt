@@ -11,10 +11,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentLoginBinding
-import com.trifork.timandroid.welcome.WelcomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
@@ -47,6 +45,11 @@ class LoginFragment : Fragment() {
 
         binding?.textViewUser?.text = args.userId
         viewModel.onUserIdChange(args.userId)
+
+        if(tim.storage.hasBiometricAccessForRefreshToken(args.userId)) {
+            viewModel.biometricLogin(this)
+        }
+
         return binding?.root
     }
 
@@ -70,7 +73,7 @@ class LoginFragment : Fragment() {
             .onEach {
                 when (it) {
                     is LoginViewModel.Event.NavigateToMain -> navigateToMain()
-                    LoginViewModel.Event.NavigateToLogin -> navigateToAuthenticated()
+                    LoginViewModel.Event.NavigateToAuthenticated -> navigateToAuthenticated()
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)

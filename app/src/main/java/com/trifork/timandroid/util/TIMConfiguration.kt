@@ -20,7 +20,7 @@ fun configureTIM(context: Context) : TIM {
         listOf(OIDScopeOpenID, OIDScopeProfile)
     )
 
-    TIM.configure(timConfiguration, context)
+    TIM.configure(timConfiguration, context = context)
 
     return TIM
 }

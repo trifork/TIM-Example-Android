@@ -4,27 +4,29 @@ import com.trifork.timandroid.TIM
 import com.trifork.timandroid.authenticated.AuthenticatedViewModel
 import com.trifork.timandroid.createnewpincode.CreateNewPinCodeViewModel
 import com.trifork.timandroid.login.LoginViewModel
+import com.trifork.timandroid.token.TokenViewModel
 import com.trifork.timandroid.welcome.WelcomeViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.GlobalScope
 
 @Module
 @InstallIn(SingletonComponent::class)
 class ViewModelModule {
 
-    //TODO(Which scope are we supposed to use?)
     @Provides
-    fun provideCreateNewPinCodeViewModel(tim: TIM): CreateNewPinCodeViewModel = CreateNewPinCodeViewModel(tim, GlobalScope)
+    fun provideCreateNewPinCodeViewModel(tim: TIM): CreateNewPinCodeViewModel = CreateNewPinCodeViewModel(tim)
 
     @Provides
-    fun provideLoginViewModel(tim: TIM): LoginViewModel = LoginViewModel(tim, GlobalScope)
+    fun provideLoginViewModel(tim: TIM): LoginViewModel = LoginViewModel(tim)
 
     @Provides
-    fun provideWelcomeViewModel(): WelcomeViewModel = WelcomeViewModel()
+    fun provideWelcomeViewModel(tim: TIM): WelcomeViewModel = WelcomeViewModel()
 
     @Provides
-    fun provideAuthenticatedViewModel(tim: TIM): AuthenticatedViewModel = AuthenticatedViewModel(tim, GlobalScope)
+    fun provideAuthenticatedViewModel(tim: TIM): AuthenticatedViewModel = AuthenticatedViewModel(tim)
+
+    @Provides
+    fun provideTokenViewModel(tim: TIM): TokenViewModel = TokenViewModel(tim)
 }

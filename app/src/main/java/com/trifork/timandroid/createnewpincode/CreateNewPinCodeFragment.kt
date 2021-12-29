@@ -68,6 +68,7 @@ class CreateNewPinCodeFragment : Fragment() {
             .onEach {
                 when(it) {
                     is CreateNewPinCodeViewModel.Event.NavigateToLogin -> navigateToLoginFragment()
+                    is CreateNewPinCodeViewModel.Event.StoredRefreshToken -> viewModel.storeRefreshTokenWithBiometric(it.userId, this)
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)

@@ -1,12 +1,12 @@
 package com.trifork.timandroid.login
 
-import androidx.lifecycle.LiveData
+import android.util.Log
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trifork.timandroid.TIM
 import com.trifork.timencryptedstorage.models.TIMResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -14,13 +14,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    val tim: TIM,
-    val scope: CoroutineScope
+    val tim: TIM
 ) : ViewModel() {
 
     sealed class Event {
         object NavigateToMain : Event()
-        object NavigateToLogin: Event()
+        object NavigateToAuthenticated : Event()
     }
 
     private val eventChannel = Channel<Event>(Channel.BUFFERED)
@@ -45,14 +44,21 @@ class LoginViewModel @Inject constructor(
     }
 
     fun login() = viewModelScope.launch {
-
-        val result = tim.auth.loginWithPassword(scope, _userId.value, _pinCode.value, true).await()
+        val result = tim.auth.loginWithPassword(this, _userId.value, _pinCode.value, true).await()
 
         when (result) {
             is TIMResult.Failure -> TODO()
-            is TIMResult.Success -> eventChannel.send(Event.NavigateToLogin)
+            is TIMResult.Success -> eventChannel.send(Event.NavigateToAuthenticated)
         }
+    }
 
+    fun biometricLogin(fragment: Fragment) = viewModelScope.launch {
+        val result = tim.auth.loginWithBiometricId(this, _userId.value, fragment = fragment).await()
+
+        when (result) {
+            is TIMResult.Failure -> Log.d("LoginViewModel", result.error.toString())
+            is TIMResult.Success -> eventChannel.send(Event.NavigateToAuthenticated)
+        }
     }
 
 }

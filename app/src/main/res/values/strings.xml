@@ -35,4 +35,10 @@
     <string name="fragment_authenticated_button_log_out">🚪 Log out</string>
     <string name="fragment_authenticated_button_delete_user">❗ Delete user from this device</string>
 
+    <!-- fragment_token -->
+    <string name="fragment_token_text_view_title_refresh_token">Refresh Token</string>
+    <string name="fragment_token_text_view_title_access_token">Access Token</string>
+    <string name="fragment_token_text_view_expiration_title">Expiration</string>
+    <string name="fragment_token_text_view_token_title">Token</string>
+
 </resources>

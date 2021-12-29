@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+
+    <TextView
+        android:id="@+id/text_view_title_token"
+        style="?attr/textAppearanceHeadline5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/fragment_token_text_view_title_refresh_token"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_expiration_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_token_text_view_expiration_title"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_title_token" />
+
+    <TextView
+        android:id="@+id/text_view_expiration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_expiration_title" />
+
+    <TextView
+        android:id="@+id/text_view_token_title"
+        style="?attr/textAllCaps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_token_text_view_token_title"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_expiration" />
+
+    <TextView
+        android:id="@+id/text_view_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_token_title" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

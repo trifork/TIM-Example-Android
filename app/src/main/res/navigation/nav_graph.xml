@@ -59,6 +59,23 @@
         <action
             android:id="@+id/action_fragment_authenticated_to_fragment_welcome"
             app:destination="@id/fragment_welcome" />
+        <action
+            android:id="@+id/action_fragment_authenticated_to_fragment_token"
+            app:destination="@id/fragment_token" >
+            <argument
+                android:name="tokenType"
+                app:argType="com.trifork.timandroid.token.TokenType" />
+
+        </action>
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_token"
+        android:name="com.trifork.timandroid.token.TokenFragment"
+        android:label="TokenFragment" >
+        <argument
+            android:name="tokenType"
+            app:argType="com.trifork.timandroid.token.TokenType" />
 
     </fragment>
 

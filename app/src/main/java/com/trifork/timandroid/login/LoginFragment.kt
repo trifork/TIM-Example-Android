@@ -46,7 +46,7 @@ class LoginFragment : Fragment() {
         binding?.textViewUser?.text = args.userId
         viewModel.onUserIdChange(args.userId)
 
-        if(tim.storage.hasBiometricAccessForRefreshToken(args.userId)) {
+        if (tim.storage.hasBiometricAccessForRefreshToken(args.userId)) {
             viewModel.biometricLogin(this)
         }
 

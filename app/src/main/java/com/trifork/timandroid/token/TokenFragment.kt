@@ -51,7 +51,7 @@ class TokenFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.jwtToken.collect {
                 binding?.textViewToken?.text = it?.token
-                binding?.textViewExpiration?.text = it?.expireDate.toString()
+                binding?.textViewExpiration?.text = it?.expire.toString()
             }
         }
 

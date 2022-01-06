@@ -17,6 +17,8 @@ class LoginViewModel @Inject constructor(
     val tim: TIM
 ) : ViewModel() {
 
+    private val TAG = "LoginViewModel"
+
     sealed class Event {
         object NavigateToMain : Event()
         object NavigateToAuthenticated : Event()
@@ -47,7 +49,7 @@ class LoginViewModel @Inject constructor(
         val result = tim.auth.loginWithPassword(this, _userId.value, _pinCode.value, true).await()
 
         when (result) {
-            is TIMResult.Failure -> TODO()
+            is TIMResult.Failure -> Log.d(TAG, result.error.toString())
             is TIMResult.Success -> eventChannel.send(Event.NavigateToAuthenticated)
         }
     }
@@ -56,7 +58,7 @@ class LoginViewModel @Inject constructor(
         val result = tim.auth.loginWithBiometricId(this, _userId.value, fragment = fragment).await()
 
         when (result) {
-            is TIMResult.Failure -> Log.d("LoginViewModel", result.error.toString())
+            is TIMResult.Failure -> Log.d(TAG, result.error.toString())
             is TIMResult.Success -> eventChannel.send(Event.NavigateToAuthenticated)
         }
     }

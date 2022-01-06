@@ -2,7 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
     app:startDestination="@id/fragment_welcome">
+
+    <action
+        android:id="@+id/action_to_fragment_login"
+        app:destination="@id/fragment_welcome" />
 
     <fragment
         android:id="@+id/fragment_welcome"
@@ -61,7 +66,7 @@
             app:destination="@id/fragment_welcome" />
         <action
             android:id="@+id/action_fragment_authenticated_to_fragment_token"
-            app:destination="@id/fragment_token" >
+            app:destination="@id/fragment_token">
             <argument
                 android:name="tokenType"
                 app:argType="com.trifork.timandroid.token.TokenType" />
@@ -72,7 +77,7 @@
     <fragment
         android:id="@+id/fragment_token"
         android:name="com.trifork.timandroid.token.TokenFragment"
-        android:label="TokenFragment" >
+        android:label="TokenFragment">
         <argument
             android:name="tokenType"
             app:argType="com.trifork.timandroid.token.TokenType" />

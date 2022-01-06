@@ -7,8 +7,6 @@
     <string name="text_input_layout_user_name">Type in name for user</string>
     <string name="text_input_layout_user_pin">Type in a new PIN (at least 4 numbers)</string>
     <string name="button_save">Save</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- fragment_welcome -->
     <string name="fragment_welcome">TIM Example</string>
@@ -40,5 +38,16 @@
     <string name="fragment_token_text_view_title_access_token">Access Token</string>
     <string name="fragment_token_text_view_expiration_title">Expiration</string>
     <string name="fragment_token_text_view_token_title">Token</string>
+
+    <!-- biometric authentication prompt -->
+    <string name="biometric_util_title">Title</string>
+    <string name="biometric_util_subtitle">Subtitle</string>
+    <string name="biometric_util_description">Description</string>
+    <string name="biometric_util_negativeButtonText">NegativeButtonText</string>
+
+    <!-- logout dialog fragment -->
+    <string name="dialog_fragment_title">Your access has expired!</string>
+    <string name="dialog_fragment_message">You will be logged out</string>
+    <string name="dialog_fragment_ok">OK</string>
 
 </resources>

@@ -45,6 +45,11 @@
     <string name="fragment_biometric_settings_button_enable">Enable biometric authentication</string>
     <string name="fragment_biometric_settings_button_skip">I don\'t want to enable biometric authentication</string>
 
+
+    <string name="fragment_biometric_settings_text_view_not_setup_subtitle">You have not configured biometric authentication yet, would you like to configure it?</string>
+    <string name="fragment_biometric_settings_button_not_setup_enroll">Yes let me setup biometric authentication</string>
+    <string name="fragment_biometric_settings_button_not_setup_close">No thanks close this</string>
+
     <string name="fragment_biometric_settings_text_view_unavailable_subtitle">Your device does not support biometric authentication.</string>
     <string name="fragment_biometric_settings_button_unavailable_close">Alright, let\'s lets close this</string>
 

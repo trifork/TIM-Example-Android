@@ -6,9 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trifork.timandroid.TIM
-import com.trifork.timandroid.biometric.TIMAuthenticationStatusEnum
+import com.trifork.timandroid.biometric.TIMAuthenticationStatus
 import com.trifork.timandroid.biometric.status
-import com.trifork.timandroid.createnewpincode.CreateNewPinCodeViewModel
 import com.trifork.timencryptedstorage.models.TIMResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -44,11 +43,6 @@ class BiometricSettingsViewModel @Inject constructor() : ViewModel() {
         _pinCode.value = text
     }
 
-    val isSubmitEnabled: Flow<Boolean> = _pinCode.transform {pinCode ->
-        val isPasswordCorrect = pinCode.length >= 4
-        emit(isPasswordCorrect)
-    }
-
     fun storeRefreshTokenWithBiometric(fragment: Fragment) = viewModelScope.launch {
         _loading.value = true
         val result = TIM.storage.enableBiometricAccessForRefreshToken(this, _pinCode.value, _userId.value, fragment).await()
@@ -64,15 +58,15 @@ class BiometricSettingsViewModel @Inject constructor() : ViewModel() {
         val status = TIM.hasBiometricCapability(context)
 
         when (status.status) {
-            TIMAuthenticationStatusEnum.BIOMETRIC_SUCCESS -> {
+            TIMAuthenticationStatus.BIOMETRIC_SUCCESS -> {
                 Log.d(TAG, "BIOMETRIC_SUCCESS, we can use biometric")
                 eventChannel.send(Event.BiometricSuccess)
             }
-            TIMAuthenticationStatusEnum.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+            TIMAuthenticationStatus.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                 Log.d(TAG, "BIOMETRIC_ERROR_NONE_ENROLLED, ask the the user to enroll")
                 eventChannel.send(Event.BiometricNoneEnrolled)
             }
-            TIMAuthenticationStatusEnum.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
+            TIMAuthenticationStatus.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
                 Log.d(TAG, "BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED, ask the the user to update")
                 eventChannel.send(Event.BiometricSecurityUpdateRequired)
             }

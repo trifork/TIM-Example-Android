@@ -47,6 +47,38 @@
         app:layout_constraintTop_toBottomOf="@+id/button_available_enable" />
 
     <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_biometric_not_setup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="text_view_not_setup_subtitle,button_not_setup_enable,button_not_setup_skip"/>
+
+    <TextView
+        android:id="@+id/text_view_not_setup_subtitle"
+        style="?textAppearanceBody1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_biometric_settings_text_view_not_setup_subtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
+
+    <Button
+        android:id="@+id/button_not_setup_enable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_biometric_settings_button_enable"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_not_setup_subtitle" />
+
+    <Button
+        android:id="@+id/button_not_setup_skip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_biometric_settings_button_not_setup_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_not_setup_enable" />
+
+    <androidx.constraintlayout.widget.Group
         android:id="@+id/group_biometric_unavailable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

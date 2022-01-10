@@ -17,6 +17,7 @@ import com.trifork.timandroid.helpers.JWT
 import com.trifork.timandroid.login.LoginFragmentArgs
 import com.trifork.timandroid.login.LoginFragmentDirections
 import com.trifork.timandroid.token.TokenType
+import com.trifork.timandroid.util.AuthenticatedUsers
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -29,6 +30,9 @@ class AuthenticatedFragment : Fragment() {
 
     @Inject
     lateinit var viewModel: AuthenticatedViewModel
+
+    @Inject
+    lateinit var authenticatedUsers : AuthenticatedUsers
 
     private val args: AuthenticatedFragmentArgs by navArgs()
 
@@ -45,8 +49,7 @@ class AuthenticatedFragment : Fragment() {
 
         initListeners()
 
-        //TODO Add user name instead of just showing userId
-        binding?.userName?.text = context?.getString(R.string.fragment_authenticated_text_view_user_name)?.replace("%1", args.userId)
+        binding?.userName?.text = context?.getString(R.string.fragment_authenticated_text_view_user_name)?.replace("%1", authenticatedUsers.getName(args.userId) ?: args.userId)
         binding?.textViewUserId?.text = context?.getString(R.string.fragment_authenticated_text_view_user_id)?.replace("%1", args.userId)
         viewModel.onUserIdChange(args.userId)
 

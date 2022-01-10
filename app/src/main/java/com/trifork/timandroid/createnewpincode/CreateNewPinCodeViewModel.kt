@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trifork.timandroid.TIM
+import com.trifork.timandroid.util.AuthenticatedUsers
 import com.trifork.timencryptedstorage.models.TIMResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateNewPinCodeViewModel @Inject constructor() : ViewModel() {
+class CreateNewPinCodeViewModel @Inject constructor(val authenticatedUsers: AuthenticatedUsers) : ViewModel() {
 
     sealed class Event {
         class StoredRefreshToken(val userId: String, val pinCode: String) : Event()
@@ -49,7 +50,10 @@ class CreateNewPinCodeViewModel @Inject constructor() : ViewModel() {
             val storeResult = TIM.storage.storeRefreshTokenWithNewPassword(this, refreshToken, _pinCode.value).await()
 
             when (storeResult) {
-                is TIMResult.Success -> eventChannel.send(Event.StoredRefreshToken(refreshToken.userId, _pinCode.value))
+                is TIMResult.Success -> {
+                    authenticatedUsers.addAvailableUser(refreshToken.userId, _name.value)
+                    eventChannel.send(Event.StoredRefreshToken(refreshToken.userId, _pinCode.value))
+                }
             }
         }
         _loading.value = false

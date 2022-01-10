@@ -2,6 +2,7 @@ package com.trifork.timandroid.di
 
 import android.content.Context
 import com.trifork.timandroid.TIM
+import com.trifork.timandroid.util.AuthenticatedUsers
 import com.trifork.timandroid.util.configureTIM
 import dagger.Module
 import dagger.Provides
@@ -19,5 +20,11 @@ class TIMModule {
     fun provideTIM(@ApplicationContext context: Context): TIM {
         return configureTIM(context)
     }
+
+   @Provides
+   @Singleton
+   fun provideAuthenticatedUsers(@ApplicationContext context: Context): AuthenticatedUsers {
+       return AuthenticatedUsers(context)
+   }
 
 }

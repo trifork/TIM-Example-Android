@@ -14,6 +14,7 @@ import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.authenticated.AuthenticatedFragmentDirections
 import com.trifork.timandroid.databinding.FragmentCreateNewPinCodeBinding
+import com.trifork.timandroid.util.AuthenticatedUsers
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn

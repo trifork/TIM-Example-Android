@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentWelcomeBinding
+import com.trifork.timandroid.util.AuthenticatedUsers
 import com.trifork.timencryptedstorage.models.TIMResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -26,7 +27,10 @@ class WelcomeFragment : Fragment(), UserLoginAdapter.UserLoginAdapterClickListen
     @Inject
     lateinit var viewModel: WelcomeViewModel
 
-    private val userLoginAdapter = UserLoginAdapter(this)
+    @Inject
+    lateinit var authenticatedUsers: AuthenticatedUsers
+
+    private var userLoginAdapter : UserLoginAdapter? = null
 
     private var binding: FragmentWelcomeBinding? = null
 
@@ -42,7 +46,9 @@ class WelcomeFragment : Fragment(), UserLoginAdapter.UserLoginAdapterClickListen
             login()
         }
 
-        userLoginAdapter.userLogins = TIM.storage.availableUserIds.toMutableList()
+        userLoginAdapter = UserLoginAdapter(this, authenticatedUsers)
+
+        userLoginAdapter?.userLogins = TIM.storage.availableUserIds.toList()
 
         binding?.recyclerView?.adapter = userLoginAdapter
         binding?.recyclerView?.layoutManager = LinearLayoutManager(context)

@@ -1,20 +1,17 @@
 package com.trifork.timandroid.createnewpincode
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trifork.timandroid.R
-import com.trifork.timandroid.TIM
-import com.trifork.timandroid.authenticated.AuthenticatedFragmentDirections
 import com.trifork.timandroid.databinding.FragmentCreateNewPinCodeBinding
-import com.trifork.timandroid.util.AuthenticatedUsers
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
@@ -64,7 +61,7 @@ class CreateNewPinCodeFragment : Fragment() {
         viewModel.eventsFlow
             .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
             .onEach {
-                when(it) {
+                when (it) {
                     is CreateNewPinCodeViewModel.Event.NavigateToLogin -> navigateToLoginFragment()
                     is CreateNewPinCodeViewModel.Event.StoredRefreshToken -> navigateToBiometricSettingsFragment(it.userId, it.pinCode)
                 }

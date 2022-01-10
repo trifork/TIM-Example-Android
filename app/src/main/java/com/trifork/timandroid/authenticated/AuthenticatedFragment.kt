@@ -13,9 +13,6 @@ import androidx.navigation.fragment.navArgs
 import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentAuthenticatedBinding
-import com.trifork.timandroid.helpers.JWT
-import com.trifork.timandroid.login.LoginFragmentArgs
-import com.trifork.timandroid.login.LoginFragmentDirections
 import com.trifork.timandroid.token.TokenType
 import com.trifork.timandroid.util.AuthenticatedUsers
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +29,7 @@ class AuthenticatedFragment : Fragment() {
     lateinit var viewModel: AuthenticatedViewModel
 
     @Inject
-    lateinit var authenticatedUsers : AuthenticatedUsers
+    lateinit var authenticatedUsers: AuthenticatedUsers
 
     private val args: AuthenticatedFragmentArgs by navArgs()
 
@@ -47,11 +44,11 @@ class AuthenticatedFragment : Fragment() {
     ): View? {
         binding = FragmentAuthenticatedBinding.inflate(inflater, container, false)
 
-        initListeners()
-
         binding?.userName?.text = context?.getString(R.string.fragment_authenticated_text_view_user_name)?.replace("%1", authenticatedUsers.getName(args.userId) ?: args.userId)
         binding?.textViewUserId?.text = context?.getString(R.string.fragment_authenticated_text_view_user_id)?.replace("%1", args.userId)
         viewModel.onUserIdChange(args.userId)
+
+        initListeners()
 
         return binding?.root
     }
@@ -73,11 +70,29 @@ class AuthenticatedFragment : Fragment() {
             viewModel.deleteUser()
         }
 
+        //Are we not already biometric authenticated? Then make it possible to do so
+        if(!viewModel.biometricAuthentication()) {
+            binding?.buttonBiometricSettings?.setOnClickListener {
+                navigateToBiometricSettingsFragment(viewModel.getUserId())
+            }
+            binding?.textViewBiometricSettings?.text = context?.getString(R.string.fragment_authenticated_text_view_biometric_available_not_configured)
+        }
+        else {
+            binding?.buttonBiometricSettings?.visibility = View.GONE
+            if(viewModel.biometricAvailable(this.requireContext())) {
+                binding?.textViewBiometricSettings?.text = context?.getString(R.string.fragment_authenticated_text_view_biometric_enabled)
+            }
+            else {
+                binding?.textViewBiometricSettings?.text = context?.getString(R.string.fragment_authenticated_text_view_biometric_not_available)
+            }
+        }
+
         viewModel.eventsFlow
             .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
             .onEach {
                 when (it) {
                     is AuthenticatedViewModel.Event.NavigateToWelcome -> navigateToWelcomeFragment()
+                    is AuthenticatedViewModel.Event.NavigateToBiometricSettings -> navigateToBiometricSettingsFragment(it.userId)
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -96,4 +111,10 @@ class AuthenticatedFragment : Fragment() {
         }
     }
 
+    private fun navigateToBiometricSettingsFragment(userId: String) {
+        lifecycleScope.launchWhenResumed {
+            val action = AuthenticatedFragmentDirections.actionFragmentAuthenticatedToFragmentBiometricSettings(userId)
+            findNavController().navigate(action)
+        }
+    }
 }

@@ -33,19 +33,38 @@ class BiometricSettingsViewModel @Inject constructor() : ViewModel() {
 
     private val _loading = MutableStateFlow(false)
     private val _userId = MutableStateFlow("")
-    private val _pinCode = MutableStateFlow("")
+    private val _pinCode = MutableStateFlow<String?>(null)
+    private var _requirePinCode = MutableStateFlow(true)
 
     fun onUserIdChange(userId: String) {
         _userId.value = userId
     }
 
-    fun onPinChange(text: String) {
+    fun requirePinCode(boolean: Boolean) {
+        _requirePinCode.value = boolean
+    }
+
+    fun onPinChange(text: String?) {
         _pinCode.value = text
     }
 
+    fun requirePinCode() : Boolean {
+        return _requirePinCode.value
+    }
+
+    val isSubmitEnabled: Flow<Boolean> = _pinCode.map {
+        it != null && it.length >= 4
+    }
+
     fun storeRefreshTokenWithBiometric(fragment: Fragment) = viewModelScope.launch {
+        val pinCode = _pinCode.value
+        if(pinCode == null) {
+            Log.d(TAG, "No pin code set")
+            return@launch
+        }
+
         _loading.value = true
-        val result = TIM.storage.enableBiometricAccessForRefreshToken(this, _pinCode.value, _userId.value, fragment).await()
+        val result = TIM.storage.enableBiometricAccessForRefreshToken(this, pinCode, _userId.value, fragment).await()
 
         when (result) {
             is TIMResult.Failure -> Log.d(TAG, result.error.toString())

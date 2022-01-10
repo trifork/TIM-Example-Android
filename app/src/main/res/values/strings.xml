@@ -26,9 +26,13 @@
     <string name="fragment_authenticated_button_access_token">Access Token </string>
     <string name="fragment_authenticated_button_refresh_token">Refresh Token </string>
     <string name="fragment_authenticated_text_view_biometric_settings">Biometric settings</string>
+    <string name="fragment_authenticated_text_view_biometric_enabled">The user has biometric authentication enabled</string>
+    <string name="fragment_authenticated_text_view_biometric_available_not_configured">Biometric login is not enabled, enable it now.</string>
     <string name="fragment_authenticated_text_view_biometric_not_available">Biometric login is not available on this device.</string>
+    <string name="fragment_authenticated_button_biometric_settings">Enable biometric authentication</string>
     <string name="fragment_authenticated_text_view_user_data">User data</string>
     <string name="fragment_authenticated_text_view_user_id">UserId %1</string>
+
     <string name="fragment_authenticated_text_view_exit">Exit</string>
     <string name="fragment_authenticated_button_log_out">🚪 Log out</string>
     <string name="fragment_authenticated_button_delete_user">❗ Delete user from this device</string>
@@ -45,6 +49,7 @@
     <string name="fragment_biometric_settings_button_enable">Enable biometric authentication</string>
     <string name="fragment_biometric_settings_button_skip">I don\'t want to enable biometric authentication</string>
 
+    <string name="fragment_biometric_text_input_layout_pin_code">Pin code</string>
 
     <string name="fragment_biometric_settings_text_view_not_setup_subtitle">You have not configured biometric authentication yet, would you like to configure it?</string>
     <string name="fragment_biometric_settings_button_not_setup_enroll">Yes let me setup biometric authentication</string>

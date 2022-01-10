@@ -37,7 +37,7 @@
             app:destination="@id/fragment_welcome" />
         <action
             android:id="@+id/action_fragment_create_new_pin_code_to_fragment_biometric_settings"
-            app:destination="@id/fragment_biometric_settings" >
+            app:destination="@id/fragment_biometric_settings">
             <argument
                 android:name="userId"
                 app:argType="string" />
@@ -60,11 +60,13 @@
 
         <argument
             android:name="pinCode"
+            android:defaultValue="@null"
+            app:nullable="true"
             app:argType="string" />
 
         <action
             android:id="@+id/action_fragment_biometric_settings_fragment_welcome"
-            app:destination="@id/fragment_welcome" >
+            app:destination="@id/fragment_welcome">
 
             <argument
                 android:name="userId"
@@ -106,9 +108,15 @@
             <argument
                 android:name="tokenType"
                 app:argType="com.trifork.timandroid.token.TokenType" />
-
         </action>
 
+        <action
+            android:id="@+id/action_fragment_authenticated_to_fragment_biometric_settings"
+            app:destination="@id/fragment_biometric_settings">
+            <argument
+                android:name="userId"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/fragment_token"

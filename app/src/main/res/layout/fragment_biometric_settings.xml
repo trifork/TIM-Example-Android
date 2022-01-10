@@ -102,5 +102,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_unavailable_subtitle" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_biometric_available_no_pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="text_view_available_subtitle_no_pin,text_input_layout_pin_code,button_available_enable_pin,button_available_skip_pin"/>
+
+    <TextView
+        android:id="@+id/text_view_available_subtitle_no_pin"
+        style="?textAppearanceBody1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_biometric_settings_text_view_subtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_pin_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="@string/fragment_biometric_text_input_layout_pin_code"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_available_subtitle_no_pin">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_edit_text_pin_code"
+            android:inputType="textPersonName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/button_available_enable_pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_biometric_settings_button_enable"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_pin_code" />
+
+    <Button
+        android:id="@+id/button_available_skip_pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_biometric_settings_button_skip"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_available_enable_pin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

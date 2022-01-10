@@ -39,6 +39,15 @@
     <string name="fragment_token_text_view_expiration_title">Expiration</string>
     <string name="fragment_token_text_view_token_title">Token</string>
 
+    <!-- fragment biometric settings -->
+    <string name="fragment_biometric_settings_text_view_title">Biometric login</string>
+    <string name="fragment_biometric_settings_text_view_subtitle">Would you like to enable biometric authentication for your user?</string>
+    <string name="fragment_biometric_settings_button_enable">Enable biometric authentication</string>
+    <string name="fragment_biometric_settings_button_skip">I don\'t want to enable biometric authentication</string>
+
+    <string name="fragment_biometric_settings_text_view_unavailable_subtitle">Your device does not support biometric authentication.</string>
+    <string name="fragment_biometric_settings_button_unavailable_close">Alright, let\'s lets close this</string>
+
     <!-- biometric authentication prompt -->
     <string name="biometric_util_title">Title</string>
     <string name="biometric_util_subtitle">Subtitle</string>

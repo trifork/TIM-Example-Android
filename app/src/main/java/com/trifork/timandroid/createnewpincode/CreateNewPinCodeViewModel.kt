@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trifork.timandroid.TIM
-import com.trifork.timandroid.helpers.userId
 import com.trifork.timencryptedstorage.models.TIMResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -14,18 +13,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateNewPinCodeViewModel @Inject constructor(
-    val tim: TIM
-) : ViewModel() {
+class CreateNewPinCodeViewModel @Inject constructor() : ViewModel() {
 
     sealed class Event {
-        class StoredRefreshToken(val userId: String) : Event()
+        class StoredRefreshToken(val userId: String, val pinCode: String) : Event()
         object NavigateToLogin : Event()
     }
 
     private val eventChannel = Channel<Event>(Channel.BUFFERED)
     val eventsFlow = eventChannel.receiveAsFlow()
 
+    private val _loading = MutableStateFlow(false)
     private val _name = MutableStateFlow("")
     private val _pinCode = MutableStateFlow("")
 
@@ -45,24 +43,15 @@ class CreateNewPinCodeViewModel @Inject constructor(
 
     fun storeRefreshToken() = viewModelScope.launch {
         //TODO(Save to shared preferences) TIM.auth.refreshToken.userId
-        val refreshToken = tim.auth.getRefreshToken()
+        _loading.value = true
+        val refreshToken = TIM.auth.getRefreshToken()
         if (refreshToken != null) {
-            val storeResult = tim.storage.storeRefreshTokenWithNewPassword(this, refreshToken, _pinCode.value).await()
+            val storeResult = TIM.storage.storeRefreshTokenWithNewPassword(this, refreshToken, _pinCode.value).await()
 
             when (storeResult) {
-                is TIMResult.Success -> eventChannel.send(Event.StoredRefreshToken(refreshToken.userId) )
+                is TIMResult.Success -> eventChannel.send(Event.StoredRefreshToken(refreshToken.userId, _pinCode.value))
             }
         }
+        _loading.value = false
     }
-
-    fun storeRefreshTokenWithBiometric(userId: String, fragment: Fragment) = viewModelScope.launch {
-        val result = tim.storage.enableBiometricAccessForRefreshToken(this, _pinCode.value, userId, fragment).await()
-
-        when (result) {
-            is TIMResult.Failure -> Log.d("CreateNewPinCodeViewModel", result.error.toString())
-            is TIMResult.Success -> eventChannel.send(Event.NavigateToLogin)
-        }
-
-    }
-
 }

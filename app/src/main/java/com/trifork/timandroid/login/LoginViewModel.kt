@@ -13,9 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    val tim: TIM
-) : ViewModel() {
+class LoginViewModel @Inject constructor() : ViewModel() {
 
     private val TAG = "LoginViewModel"
 
@@ -46,7 +44,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun login() = viewModelScope.launch {
-        val result = tim.auth.loginWithPassword(this, _userId.value, _pinCode.value, true).await()
+        val result = TIM.auth.loginWithPassword(this, _userId.value, _pinCode.value, true).await()
 
         when (result) {
             is TIMResult.Failure -> Log.d(TAG, result.error.toString())
@@ -55,7 +53,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun biometricLogin(fragment: Fragment) = viewModelScope.launch {
-        val result = tim.auth.loginWithBiometricId(this, _userId.value, fragment = fragment).await()
+        val result = TIM.auth.loginWithBiometricId(this, _userId.value, fragment = fragment).await()
 
         when (result) {
             is TIMResult.Failure -> Log.d(TAG, result.error.toString())

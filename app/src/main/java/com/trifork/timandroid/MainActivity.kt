@@ -7,11 +7,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
+
+    //TODO Can we somehow avoid calling this in our main activity? JHE (10.01.21)
+    @Inject
+    lateinit var tim: TIM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             .setTitle(R.string.dialog_fragment_title)
             .setMessage(R.string.dialog_fragment_message)
             .setPositiveButton(R.string.dialog_fragment_ok,
-                DialogInterface.OnClickListener { dialog, id ->
+                DialogInterface.OnClickListener { _, _ ->
                     navigateToWelcomeFragment()
                 })
         return builder.create()

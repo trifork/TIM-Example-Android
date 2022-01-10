@@ -2,6 +2,7 @@ package com.trifork.timandroid.di
 
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.authenticated.AuthenticatedViewModel
+import com.trifork.timandroid.biometricSettings.BiometricSettingsViewModel
 import com.trifork.timandroid.createnewpincode.CreateNewPinCodeViewModel
 import com.trifork.timandroid.login.LoginViewModel
 import com.trifork.timandroid.token.TokenViewModel
@@ -16,17 +17,20 @@ import dagger.hilt.components.SingletonComponent
 class ViewModelModule {
 
     @Provides
-    fun provideCreateNewPinCodeViewModel(tim: TIM): CreateNewPinCodeViewModel = CreateNewPinCodeViewModel(tim)
+    fun provideCreateNewPinCodeViewModel(): CreateNewPinCodeViewModel = CreateNewPinCodeViewModel()
 
     @Provides
-    fun provideLoginViewModel(tim: TIM): LoginViewModel = LoginViewModel(tim)
+    fun provideLoginViewModel(): LoginViewModel = LoginViewModel()
 
     @Provides
-    fun provideWelcomeViewModel(tim: TIM): WelcomeViewModel = WelcomeViewModel()
+    fun provideWelcomeViewModel(): WelcomeViewModel = WelcomeViewModel()
 
     @Provides
-    fun provideAuthenticatedViewModel(tim: TIM): AuthenticatedViewModel = AuthenticatedViewModel(tim)
+    fun provideAuthenticatedViewModel(): AuthenticatedViewModel = AuthenticatedViewModel()
 
     @Provides
-    fun provideTokenViewModel(tim: TIM): TokenViewModel = TokenViewModel(tim)
+    fun provideTokenViewModel(): TokenViewModel = TokenViewModel()
+
+    @Provides
+    fun provideBiometricSettingsViewModel(): BiometricSettingsViewModel = BiometricSettingsViewModel()
 }

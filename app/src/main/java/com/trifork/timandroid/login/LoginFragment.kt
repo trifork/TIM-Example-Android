@@ -30,10 +30,6 @@ class LoginFragment : Fragment() {
 
     val args: LoginFragmentArgs by navArgs()
 
-    //TODO(Can we utilize di better?)
-    @Inject
-    lateinit var tim: TIM
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,7 +42,7 @@ class LoginFragment : Fragment() {
         binding?.textViewUser?.text = args.userId
         viewModel.onUserIdChange(args.userId)
 
-        if (tim.storage.hasBiometricAccessForRefreshToken(args.userId)) {
+        if (TIM.storage.hasBiometricAccessForRefreshToken(args.userId)) {
             viewModel.biometricLogin(this)
         }
 

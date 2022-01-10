@@ -12,9 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TokenViewModel @Inject constructor(
-    val tim: TIM
-) : ViewModel() {
+class TokenViewModel @Inject constructor() : ViewModel() {
 
     private val _tokenType = MutableStateFlow(TokenType.Access)
 
@@ -31,15 +29,13 @@ class TokenViewModel @Inject constructor(
     private fun getToken() = viewModelScope.launch {
         _token.value = when (_tokenType.value) {
             TokenType.Access -> {
-                val accessTokenResult = tim.auth.accessToken(this).await()
+                val accessTokenResult = TIM.auth.accessToken(this).await()
                 when (accessTokenResult) {
                     is TIMResult.Failure -> null //TODO Show error toast?
                     is TIMResult.Success -> accessTokenResult.value
                 }
             }
-            TokenType.Refresh -> tim.auth.getRefreshToken()
+            TokenType.Refresh -> TIM.auth.getRefreshToken()
         }
     }
-
-
 }

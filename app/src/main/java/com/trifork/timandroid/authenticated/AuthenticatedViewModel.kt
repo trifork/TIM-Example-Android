@@ -11,9 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthenticatedViewModel @Inject constructor(
-    val tim: TIM
-) : ViewModel() {
+class AuthenticatedViewModel @Inject constructor() : ViewModel() {
 
     sealed class Event {
         object NavigateToWelcome : Event()
@@ -31,12 +29,12 @@ class AuthenticatedViewModel @Inject constructor(
     }
 
     fun logout() = viewModelScope.launch {
-        tim.auth.logout()
+        TIM.auth.logout()
         eventChannel.send(Event.NavigateToWelcome)
     }
 
     fun deleteUser() = viewModelScope.launch {
-        tim.storage.clear(_userId.value)
+        TIM.storage.clear(_userId.value)
         eventChannel.send(Event.NavigateToWelcome)
     }
 }

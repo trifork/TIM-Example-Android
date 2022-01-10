@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
+import com.trifork.timandroid.authenticated.AuthenticatedFragmentDirections
 import com.trifork.timandroid.databinding.FragmentCreateNewPinCodeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -27,10 +28,6 @@ class CreateNewPinCodeFragment : Fragment() {
 
     @Inject
     lateinit var viewModel: CreateNewPinCodeViewModel
-
-    //TODO(Can we utilize di better?)
-    @Inject
-    lateinit var tim : TIM
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,7 +65,7 @@ class CreateNewPinCodeFragment : Fragment() {
             .onEach {
                 when(it) {
                     is CreateNewPinCodeViewModel.Event.NavigateToLogin -> navigateToLoginFragment()
-                    is CreateNewPinCodeViewModel.Event.StoredRefreshToken -> viewModel.storeRefreshTokenWithBiometric(it.userId, this)
+                    is CreateNewPinCodeViewModel.Event.StoredRefreshToken -> navigateToBiometricSettingsFragment(it.userId, it.pinCode)
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -80,6 +77,11 @@ class CreateNewPinCodeFragment : Fragment() {
         }
     }
 
-
+    private fun navigateToBiometricSettingsFragment(userId: String, pinCode: String) {
+        lifecycleScope.launchWhenResumed {
+            val action = CreateNewPinCodeFragmentDirections.actionFragmentCreateNewPinCodeToFragmentBiometricSettings(userId, pinCode)
+            findNavController().navigate(action)
+        }
+    }
 
 }

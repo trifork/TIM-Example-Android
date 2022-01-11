@@ -1,5 +1,6 @@
 package com.trifork.timandroid.login
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentLoginBinding
+import com.trifork.timandroid.util.AuthenticatedUsers
+import com.trifork.timandroid.util.viewVisibility
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
@@ -28,6 +31,9 @@ class LoginFragment : Fragment() {
     @Inject
     lateinit var viewModel: LoginViewModel
 
+    @Inject
+    lateinit var authenticatedUsers: AuthenticatedUsers
+
     val args: LoginFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -39,7 +45,7 @@ class LoginFragment : Fragment() {
 
         initListeners()
 
-        binding?.textViewUser?.text = args.userId
+        binding?.textViewUser?.text = authenticatedUsers.getName(args.userId) ?: args.userId
         viewModel.onUserIdChange(args.userId)
 
         if (TIM.storage.hasBiometricAccessForRefreshToken(args.userId)) {
@@ -56,6 +62,14 @@ class LoginFragment : Fragment() {
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.isLoading.collect {
+                binding?.progressBarLoading?.visibility = viewVisibility(it)
+                binding?.buttonLogin?.isEnabled = !it
+                binding?.textInputEditTextUserPin?.isEnabled = !it
+            }
+        }
+
         binding?.buttonLogin?.setOnClickListener {
             viewModel.login()
         }
@@ -68,17 +82,10 @@ class LoginFragment : Fragment() {
             .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
             .onEach {
                 when (it) {
-                    is LoginViewModel.Event.NavigateToMain -> navigateToMain()
-                    LoginViewModel.Event.NavigateToAuthenticated -> navigateToAuthenticated()
+                    is LoginViewModel.Event.NavigateToAuthenticated -> navigateToAuthenticated()
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    private fun navigateToMain() {
-        lifecycleScope.launchWhenResumed {
-            //findNavController().navigate(R.id.action_, null)
-        }
     }
 
     private fun navigateToAuthenticated() {

@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.trifork.timandroid.R
-import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentAuthenticatedBinding
 import com.trifork.timandroid.token.TokenType
 import com.trifork.timandroid.util.AuthenticatedUsers
@@ -32,10 +31,6 @@ class AuthenticatedFragment : Fragment() {
     lateinit var authenticatedUsers: AuthenticatedUsers
 
     private val args: AuthenticatedFragmentArgs by navArgs()
-
-    //TODO(Can we utilize di better?)
-    @Inject
-    lateinit var tim: TIM
 
     override fun onCreateView(
         inflater: LayoutInflater,

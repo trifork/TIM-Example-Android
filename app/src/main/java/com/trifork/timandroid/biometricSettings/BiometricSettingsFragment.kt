@@ -18,6 +18,7 @@ import androidx.navigation.fragment.navArgs
 import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentBiometricSettingsBinding
+import com.trifork.timandroid.util.viewVisibility
 import com.trifork.timencryptedstorage.models.TIMResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -160,6 +161,4 @@ class BiometricSettingsFragment : Fragment() {
             findNavController().navigate(R.id.action_fragment_biometric_settings_fragment_welcome, null)
         }
     }
-
-    private fun viewVisibility(visible: Boolean) = if (visible) View.VISIBLE else View.GONE
 }

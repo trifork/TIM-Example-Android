@@ -10,7 +10,7 @@
         style="?attr/textAppearanceHeadline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_view_new_user"
+        android:text="@string/fragment_create_new_pin_code_text_view_new_user"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="@string/text_input_layout_user_name"
+        android:hint="@string/fragment_create_new_pin_code_text_input_layout_user_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_new_user">
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="@string/text_input_layout_user_pin"
+        android:hint="@string/fragment_create_new_pin_code_text_input_layout_user_pin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_user_name">
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/button_save"
+        android:text="@string/fragment_create_new_pin_code_button_save"
         android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/text_input_layout_user_pin" />
 

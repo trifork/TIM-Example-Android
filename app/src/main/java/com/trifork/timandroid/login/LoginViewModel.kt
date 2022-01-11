@@ -18,13 +18,13 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     private val TAG = "LoginViewModel"
 
     sealed class Event {
-        object NavigateToMain : Event()
         object NavigateToAuthenticated : Event()
     }
 
     private val eventChannel = Channel<Event>(Channel.BUFFERED)
     val eventsFlow = eventChannel.receiveAsFlow()
 
+    private val _loading = MutableStateFlow(false)
     private val _pinCode = MutableStateFlow("")
     private val _userId = MutableStateFlow("")
 
@@ -39,26 +39,32 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     val userId: StateFlow<String>
         get() = _userId
 
+    val isLoading: StateFlow<Boolean> = _loading
+
     val isSubmitEnabled: Flow<Boolean> = _pinCode.map {
         it.length >= 4
     }
 
     fun login() = viewModelScope.launch {
+        _loading.value = true
         val result = TIM.auth.loginWithPassword(this, _userId.value, _pinCode.value, true).await()
 
         when (result) {
             is TIMResult.Failure -> Log.d(TAG, result.error.toString())
             is TIMResult.Success -> eventChannel.send(Event.NavigateToAuthenticated)
         }
+        _loading.value = false
     }
 
     fun biometricLogin(fragment: Fragment) = viewModelScope.launch {
+        _loading.value = true
         val result = TIM.auth.loginWithBiometricId(this, _userId.value, fragment = fragment).await()
 
         when (result) {
             is TIMResult.Failure -> Log.d(TAG, result.error.toString())
             is TIMResult.Success -> eventChannel.send(Event.NavigateToAuthenticated)
         }
+        _loading.value = false
     }
 
 }

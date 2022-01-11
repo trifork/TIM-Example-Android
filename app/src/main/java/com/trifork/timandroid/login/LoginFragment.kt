@@ -1,6 +1,5 @@
 package com.trifork.timandroid.login
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -57,16 +56,16 @@ class LoginFragment : Fragment() {
 
     private fun initListeners() {
         lifecycleScope.launch {
-            viewModel.isSubmitEnabled.collect {
-                binding?.buttonLogin?.isEnabled = it
-            }
-        }
-
-        lifecycleScope.launch {
             viewModel.isLoading.collect {
                 binding?.progressBarLoading?.visibility = viewVisibility(it)
                 binding?.buttonLogin?.isEnabled = !it
                 binding?.textInputEditTextUserPin?.isEnabled = !it
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.isSubmitEnabled.collect {
+                binding?.buttonLogin?.isEnabled = it
             }
         }
 

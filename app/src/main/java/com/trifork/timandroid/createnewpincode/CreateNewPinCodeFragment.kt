@@ -11,13 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trifork.timandroid.R
 import com.trifork.timandroid.databinding.FragmentCreateNewPinCodeBinding
+import com.trifork.timandroid.helpers.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CreateNewPinCodeFragment : Fragment() {
+class CreateNewPinCodeFragment : BaseFragment() {
 
     private var binding: FragmentCreateNewPinCodeBinding? = null
 
@@ -66,14 +67,10 @@ class CreateNewPinCodeFragment : Fragment() {
             when (it) {
                 is CreateNewPinCodeViewModel.CreateNewPinCodeEvent.NavigateToLogin -> navigateToLoginFragment()
                 is CreateNewPinCodeViewModel.CreateNewPinCodeEvent.StoredRefreshToken -> navigateToBiometricSettingsFragment(it.userId, it.pinCode)
-                CreateNewPinCodeViewModel.CreateNewPinCodeEvent.NoTokenFailure -> showError(getString(R.string.fragment_create_new_pin_code_no_refresh_token))
-                CreateNewPinCodeViewModel.CreateNewPinCodeEvent.StoreRefreshTokenFailure -> showError(getString(R.string.fragment_create_new_pin_code_could_not_store_refresh_token))
+                CreateNewPinCodeViewModel.CreateNewPinCodeEvent.NoTokenFailure -> showError(R.string.fragment_create_new_pin_code_no_refresh_token)
+                CreateNewPinCodeViewModel.CreateNewPinCodeEvent.StoreRefreshTokenFailure -> showError(R.string.fragment_create_new_pin_code_could_not_store_refresh_token)
             }
         }
-    }
-
-    private fun showError(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
     }
 
     private fun navigateToLoginFragment() {

@@ -1,7 +1,6 @@
 package com.trifork.timandroid.biometricSettings
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,25 +9,21 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentBiometricSettingsBinding
+import com.trifork.timandroid.helpers.BaseFragment
 import com.trifork.timandroid.util.viewVisibility
-import com.trifork.timencryptedstorage.models.TIMResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class BiometricSettingsFragment : Fragment() {
+class BiometricSettingsFragment : BaseFragment() {
 
     private var binding: FragmentBiometricSettingsBinding? = null
 
@@ -62,7 +57,7 @@ class BiometricSettingsFragment : Fragment() {
 
     private fun initListeners() {
         binding?.buttonAvailableEnable?.setOnClickListener {
-            viewModel.storeRefreshTokenWithBiometric( this)
+            viewModel.storeRefreshTokenWithBiometric(this)
         }
 
         binding?.buttonAvailableEnablePin?.setOnClickListener {
@@ -95,51 +90,51 @@ class BiometricSettingsFragment : Fragment() {
             }
         }
 
-        viewModel.eventsFlow
-            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-            .onEach {
-                when (it) {
-                    BiometricSettingsViewModel.Event.NavigateToWelcome -> {
-                        if(viewModel.requirePinCode()) {
-                            activity?.onBackPressed()
-                        }
-                        else {
-                            navigateToWelcomeScreen()
-                        }
+        viewModel.subscribeToChannel(viewLifecycleOwner) {
+            when (it) {
+                BiometricSettingsViewModel.Event.NavigateToWelcome -> {
+                    if(viewModel.requirePinCode()) {
+                        activity?.onBackPressed()
                     }
-                    BiometricSettingsViewModel.Event.BiometricSuccess -> {
-                        if(viewModel.requirePinCode()) {
-                            binding?.groupBiometricAvailable?.visibility = viewVisibility(false)
-                            binding?.groupBiometricAvailableNoPin?.visibility = viewVisibility(true)
-                        }
-                        else {
-                            binding?.groupBiometricAvailable?.visibility = viewVisibility(true)
-                            binding?.groupBiometricAvailableNoPin?.visibility = viewVisibility(false)
-                        }
-                        binding?.groupBiometricUnavailable?.visibility = viewVisibility(false)
-                        binding?.groupBiometricNotSetup?.visibility = viewVisibility(false)
-                    }
-                    BiometricSettingsViewModel.Event.BiometricNoneEnrolled -> {
-                        binding?.groupBiometricAvailable?.visibility = viewVisibility(false)
-                        binding?.groupBiometricUnavailable?.visibility = viewVisibility(false)
-                        binding?.groupBiometricNotSetup?.visibility = viewVisibility(true)
-                        binding?.groupBiometricAvailableNoPin?.visibility = viewVisibility(false)
-                    }
-                    BiometricSettingsViewModel.Event.BiometricSecurityUpdateRequired -> {
-                        binding?.groupBiometricAvailable?.visibility = viewVisibility(false)
-                        binding?.groupBiometricUnavailable?.visibility = viewVisibility(false)
-                        binding?.groupBiometricNotSetup?.visibility = viewVisibility(true)
-                        binding?.groupBiometricAvailableNoPin?.visibility = viewVisibility(false)
-                    }
-                    BiometricSettingsViewModel.Event.BiometricUnavailable -> {
-                        binding?.groupBiometricAvailable?.visibility = viewVisibility(false)
-                        binding?.groupBiometricUnavailable?.visibility = viewVisibility(true)
-                        binding?.groupBiometricNotSetup?.visibility = viewVisibility(false)
-                        binding?.groupBiometricAvailableNoPin?.visibility = viewVisibility(false)
+                    else {
+                        navigateToWelcomeScreen()
                     }
                 }
+                BiometricSettingsViewModel.Event.BiometricSuccess -> {
+                    if(viewModel.requirePinCode()) {
+                        binding?.groupBiometricAvailable?.visibility = viewVisibility(false)
+                        binding?.groupBiometricAvailableNoPin?.visibility = viewVisibility(true)
+                    }
+                    else {
+                        binding?.groupBiometricAvailable?.visibility = viewVisibility(true)
+                        binding?.groupBiometricAvailableNoPin?.visibility = viewVisibility(false)
+                    }
+                    binding?.groupBiometricUnavailable?.visibility = viewVisibility(false)
+                    binding?.groupBiometricNotSetup?.visibility = viewVisibility(false)
+                }
+                BiometricSettingsViewModel.Event.BiometricNoneEnrolled -> {
+                    binding?.groupBiometricAvailable?.visibility = viewVisibility(false)
+                    binding?.groupBiometricUnavailable?.visibility = viewVisibility(false)
+                    binding?.groupBiometricNotSetup?.visibility = viewVisibility(true)
+                    binding?.groupBiometricAvailableNoPin?.visibility = viewVisibility(false)
+                }
+                BiometricSettingsViewModel.Event.BiometricSecurityUpdateRequired -> {
+                    binding?.groupBiometricAvailable?.visibility = viewVisibility(false)
+                    binding?.groupBiometricUnavailable?.visibility = viewVisibility(false)
+                    binding?.groupBiometricNotSetup?.visibility = viewVisibility(true)
+                    binding?.groupBiometricAvailableNoPin?.visibility = viewVisibility(false)
+                }
+                BiometricSettingsViewModel.Event.BiometricUnavailable -> {
+                    binding?.groupBiometricAvailable?.visibility = viewVisibility(false)
+                    binding?.groupBiometricUnavailable?.visibility = viewVisibility(true)
+                    binding?.groupBiometricNotSetup?.visibility = viewVisibility(false)
+                    binding?.groupBiometricAvailableNoPin?.visibility = viewVisibility(false)
+                }
+                is BiometricSettingsViewModel.Event.BiometricFailed -> {
+                    showError(R.string.fragment_biometric_settings_toast_error)
+                }
             }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+        }
     }
 
     private fun navigateToBiometricSettings() {

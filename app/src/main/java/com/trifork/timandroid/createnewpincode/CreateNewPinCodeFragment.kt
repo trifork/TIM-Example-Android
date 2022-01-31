@@ -4,18 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trifork.timandroid.R
 import com.trifork.timandroid.databinding.FragmentCreateNewPinCodeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,6 +43,13 @@ class CreateNewPinCodeFragment : Fragment() {
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.loading.collect {
+                binding?.textInputEditTextUserName?.isEnabled = !it
+                binding?.textInputLayoutUserPin?.isEnabled = !it
+            }
+        }
+
         binding?.buttonSave?.setOnClickListener {
             viewModel.storeRefreshToken()
         }
@@ -58,15 +62,18 @@ class CreateNewPinCodeFragment : Fragment() {
             viewModel.onPinChange(it.toString())
         }
 
-        viewModel.eventsFlow
-            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-            .onEach {
-                when (it) {
-                    is CreateNewPinCodeViewModel.Event.NavigateToLogin -> navigateToLoginFragment()
-                    is CreateNewPinCodeViewModel.Event.StoredRefreshToken -> navigateToBiometricSettingsFragment(it.userId, it.pinCode)
-                }
+        viewModel.subscribeToChannel(viewLifecycleOwner) {
+            when (it) {
+                is CreateNewPinCodeViewModel.CreateNewPinCodeEvent.NavigateToLogin -> navigateToLoginFragment()
+                is CreateNewPinCodeViewModel.CreateNewPinCodeEvent.StoredRefreshToken -> navigateToBiometricSettingsFragment(it.userId, it.pinCode)
+                CreateNewPinCodeViewModel.CreateNewPinCodeEvent.NoTokenFailure -> showError(getString(R.string.fragment_create_new_pin_code_no_refresh_token))
+                CreateNewPinCodeViewModel.CreateNewPinCodeEvent.StoreRefreshTokenFailure -> showError(getString(R.string.fragment_create_new_pin_code_could_not_store_refresh_token))
             }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+        }
+    }
+
+    private fun showError(text: String) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
     }
 
     private fun navigateToLoginFragment() {
@@ -81,5 +88,4 @@ class CreateNewPinCodeFragment : Fragment() {
             findNavController().navigate(action)
         }
     }
-
 }

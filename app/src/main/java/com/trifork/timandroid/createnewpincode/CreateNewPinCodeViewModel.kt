@@ -1,30 +1,25 @@
 package com.trifork.timandroid.createnewpincode
 
-import android.util.Log
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trifork.timandroid.TIM
+import com.trifork.timandroid.helpers.BaseViewModel
 import com.trifork.timandroid.util.AuthenticatedUsers
 import com.trifork.timencryptedstorage.models.TIMResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateNewPinCodeViewModel @Inject constructor(val authenticatedUsers: AuthenticatedUsers) : ViewModel() {
+class CreateNewPinCodeViewModel @Inject constructor(val authenticatedUsers: AuthenticatedUsers) : BaseViewModel<CreateNewPinCodeViewModel.CreateNewPinCodeEvent>() {
 
-    sealed class Event {
-        class StoredRefreshToken(val userId: String, val pinCode: String) : Event()
-        object NavigateToLogin : Event()
+    sealed class CreateNewPinCodeEvent: ViewModelEvent() {
+        class StoredRefreshToken(val userId: String, val pinCode: String) : CreateNewPinCodeEvent()
+        object NoTokenFailure : CreateNewPinCodeEvent()
+        object StoreRefreshTokenFailure : CreateNewPinCodeEvent()
+        object NavigateToLogin : CreateNewPinCodeEvent()
     }
 
-    private val eventChannel = Channel<Event>(Channel.BUFFERED)
-    val eventsFlow = eventChannel.receiveAsFlow()
-
-    private val _loading = MutableStateFlow(false)
     private val _name = MutableStateFlow("")
     private val _pinCode = MutableStateFlow("")
 
@@ -36,26 +31,28 @@ class CreateNewPinCodeViewModel @Inject constructor(val authenticatedUsers: Auth
         _pinCode.value = text
     }
 
-    val isSubmitEnabled: Flow<Boolean> = combine(_name, _pinCode) { name, pinCode ->
+    val isSubmitEnabled: Flow<Boolean> = combine(_name, _pinCode, loading) { name, pinCode, loading ->
         val isPasswordCorrect = pinCode.length >= 4
         val isNameCorrect = name.isNotEmpty()
-        return@combine isPasswordCorrect and isNameCorrect
+        return@combine isPasswordCorrect and isNameCorrect and !loading
     }
 
-    fun storeRefreshToken() = viewModelScope.launch {
-        //TODO(Save to shared preferences) TIM.auth.refreshToken.userId
-        _loading.value = true
-        val refreshToken = TIM.auth.getRefreshToken()
-        if (refreshToken != null) {
-            val storeResult = TIM.storage.storeRefreshTokenWithNewPassword(this, refreshToken, _pinCode.value).await()
-
-            when (storeResult) {
-                is TIMResult.Success -> {
-                    authenticatedUsers.addAvailableUser(refreshToken.userId, _name.value)
-                    eventChannel.send(Event.StoredRefreshToken(refreshToken.userId, _pinCode.value))
+    fun storeRefreshToken() = sendEventOnChannel {
+        viewModelScope.async {
+            val refreshToken = TIM.auth.getRefreshToken()
+            if (refreshToken != null) {
+                val storeResult = TIM.storage.storeRefreshTokenWithNewPassword(this, refreshToken, _pinCode.value).await()
+                return@async when (storeResult) {
+                    is TIMResult.Success -> {
+                        //The user can now authenticate easily on next launch, we therefore add the user to the available users for easy access to login
+                        authenticatedUsers.addAvailableUser(refreshToken.userId, _name.value)
+                        CreateNewPinCodeEvent.StoredRefreshToken(refreshToken.userId, _pinCode.value)
+                    }
+                    is TIMResult.Failure -> CreateNewPinCodeEvent.StoreRefreshTokenFailure
                 }
             }
+            //Should not happen, the user should not be here if not already logged in
+            return@async CreateNewPinCodeEvent.NoTokenFailure
         }
-        _loading.value = false
     }
 }

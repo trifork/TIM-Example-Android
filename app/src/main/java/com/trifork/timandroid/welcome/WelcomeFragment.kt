@@ -16,9 +16,7 @@ import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentWelcomeBinding
 import com.trifork.timandroid.util.AuthenticatedUsers
-import com.trifork.timencryptedstorage.models.TIMResult
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,7 +28,7 @@ class WelcomeFragment : Fragment(), UserLoginAdapter.UserLoginAdapterClickListen
     @Inject
     lateinit var authenticatedUsers: AuthenticatedUsers
 
-    private var userLoginAdapter : UserLoginAdapter? = null
+    private var userLoginAdapter: UserLoginAdapter? = null
 
     private var binding: FragmentWelcomeBinding? = null
 
@@ -42,10 +40,6 @@ class WelcomeFragment : Fragment(), UserLoginAdapter.UserLoginAdapterClickListen
     ): View? {
         binding = FragmentWelcomeBinding.inflate(inflater, container, false)
 
-        binding?.buttonLogin?.setOnClickListener {
-            login()
-        }
-
         userLoginAdapter = UserLoginAdapter(this, authenticatedUsers)
 
         userLoginAdapter?.userLogins = TIM.storage.availableUserIds.toList()
@@ -53,31 +47,40 @@ class WelcomeFragment : Fragment(), UserLoginAdapter.UserLoginAdapterClickListen
         binding?.recyclerView?.adapter = userLoginAdapter
         binding?.recyclerView?.layoutManager = LinearLayoutManager(context)
 
+        initializeListeners()
+
         return binding?.root
     }
 
-    private fun login() {
-        lifecycleScope.launch {
-            val intentResult = TIM.auth.getOpenIDConnectLoginIntent(this).await()
-            when (intentResult) {
-                is TIMResult.Success -> resultLauncher.launch(intentResult.value)
-                is TIMResult.Failure -> Toast.makeText(activity, "Failed to get intentResult", Toast.LENGTH_LONG).show()
+    private fun initializeListeners() {
+        binding?.buttonLogin?.setOnClickListener {
+            viewModel.getLoginIntent()
+        }
+
+        viewModel.subscribeToChannel(viewLifecycleOwner) {
+            when (it) {
+                is WelcomeViewModel.WelcomeEvent.ResultLauncher -> {
+                    resultLauncher.launch(it.intent)
+                }
+                WelcomeViewModel.WelcomeEvent.ResultLauncherError -> {
+                    Toast.makeText(activity, "Failed to create login intent", Toast.LENGTH_LONG).show()
+                }
+                WelcomeViewModel.WelcomeEvent.HandledLoginResult -> {
+                    navigateToCreateNewPinCodeFragment()
+                }
+                WelcomeViewModel.WelcomeEvent.HandledLoginResultFailure -> {
+                    Toast.makeText(activity, "Failed to handle login result", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
 
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            if (data != null) {
-                lifecycleScope.launch {
-                    val loginResult = TIM.auth.handleOpenIDConnectLoginResult(this, data).await()
-
-                    when (loginResult) {
-                        is TIMResult.Success -> navigateToCreateNewPinCodeFragment()
-                        is TIMResult.Failure -> Toast.makeText(activity, "Failed to handle loginResult", Toast.LENGTH_LONG).show()
-                    }
-                }
+            val dataIntent: Intent? = result.data
+            if (dataIntent != null) {
+                //Send the received intent to TIM using our view model
+                viewModel.handleLoginIntent(dataIntent)
             }
         }
     }

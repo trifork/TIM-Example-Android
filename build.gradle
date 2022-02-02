@@ -5,15 +5,18 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:7.0.3"
+        classpath "com.android.tools.build:gradle:7.0.4"
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
+
         def nav_version = "2.3.5"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
-        ext.kotlin_version = '1.5.31'
-        classpath "com.android.tools.build:gradle:7.0.3"
+
+        ext.kotlin_version = '1.6.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        //TODO Added in order to get dependency to compile
+
+        //Added in order to get local include of TIM dependency to compile, only necessary because of development setup with TIM
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

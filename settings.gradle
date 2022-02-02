@@ -3,16 +3,17 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
-        jcenter() // Warning: this repository is going to shut down soon
+        maven { url 'https://jitpack.io' } //Necessary for the gradle to be able to download github packages
     }
 }
 rootProject.name = "TIM-Example-Android"
 include ':app'
 
+// The following includes are only present in order for the project to be easily toggle for development purposes.
+// Usage of TIM in production applications should not rely on the following includes. Adding maven jitpack above as part of the settings file is the only step needed in prod apps.
 include ':TIM-Android'
 project(':TIM-Android').projectDir = new File('../TIM-Android/TIM-Android-lib')
 
-//TODO(This include is necessary for TIM-Android)
+//This include is necessary for TIM-Android when building development build
 include ':TIMEncryptedStorage-Android'
 project(':TIMEncryptedStorage-Android').projectDir = new File('../TIMEncryptedStorage-Android/library')

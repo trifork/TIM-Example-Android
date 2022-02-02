@@ -11,8 +11,10 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.trifork.timandroid.R
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.databinding.FragmentLoginBinding
+import com.trifork.timandroid.helpers.BaseFragment
 import com.trifork.timandroid.util.AuthenticatedUsers
 import com.trifork.timandroid.util.viewVisibility
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginFragment : Fragment() {
+class LoginFragment : BaseFragment() {
 
     private var binding: FragmentLoginBinding? = null
 
@@ -48,7 +50,7 @@ class LoginFragment : Fragment() {
         viewModel.onUserIdChange(args.userId)
 
         if (TIM.storage.hasBiometricAccessForRefreshToken(args.userId)) {
-            viewModel.biometricLogin(this)
+            viewModel.loginBiometric(this)
         }
 
         return binding?.root
@@ -58,7 +60,6 @@ class LoginFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.isLoading.collect {
                 binding?.progressBarLoading?.visibility = viewVisibility(it)
-                binding?.buttonLogin?.isEnabled = !it
                 binding?.textInputEditTextUserPin?.isEnabled = !it
             }
         }
@@ -70,21 +71,36 @@ class LoginFragment : Fragment() {
         }
 
         binding?.buttonLogin?.setOnClickListener {
-            viewModel.login()
+            viewModel.loginPassword()
         }
 
         binding?.textInputEditTextUserPin?.addTextChangedListener {
             viewModel.onPinChange(it.toString())
         }
 
-        viewModel.eventsFlow
-            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-            .onEach {
-                when (it) {
-                    is LoginViewModel.Event.NavigateToAuthenticated -> navigateToAuthenticated()
+        viewModel.subscribeToChannel(viewLifecycleOwner) {
+            when (it) {
+                is LoginViewModel.LoginEvent.NavigateToAuthenticated -> navigateToAuthenticated()
+                LoginViewModel.LoginEvent.BiometricCanceled -> {
+                    //Do nothing besides showing login view
+                }
+                is LoginViewModel.LoginEvent.BiometricFailedError -> {
+                    showError(R.string.fragment_login_biometric_failed)
+                }
+                LoginViewModel.LoginEvent.KeyIsLocked -> {
+                    showError(R.string.fragment_login_key_locked)
+                }
+                LoginViewModel.LoginEvent.KeyServiceFailed -> {
+                    showError(R.string.fragment_login_key_server_error)
+                }
+                LoginViewModel.LoginEvent.WrongPassword -> {
+                    showError(R.string.fragment_login_wrong_password)
+                }
+                LoginViewModel.LoginEvent.GenericError -> {
+                    showError(R.string.fragment_login_generic_error)
                 }
             }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+        }
     }
 
     private fun navigateToAuthenticated() {

@@ -23,7 +23,10 @@ android {
     }
 
     buildTypes {
-        development {}
+        development {
+            initWith debug
+            debuggable true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -43,8 +46,8 @@ android {
 
 dependencies {
     //region TIM
-    debugImplementation "com.github.trifork:tim-android:1.0.4"
-    releaseImplementation "com.github.trifork:tim-android:1.0.4"
+    debugImplementation "com.github.trifork:TIM-Android:1.1.0"
+    releaseImplementation "com.github.trifork:TIM-Android:1.1.0"
     developmentImplementation project(':TIM-Android')
     //endregion
 

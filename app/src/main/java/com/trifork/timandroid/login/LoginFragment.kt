@@ -80,12 +80,17 @@ class LoginFragment : BaseFragment() {
 
         viewModel.subscribeToChannel(viewLifecycleOwner) {
             when (it) {
-                is LoginViewModel.LoginEvent.NavigateToAuthenticated -> navigateToAuthenticated()
+                is LoginViewModel.LoginEvent.NavigateToAuthenticated -> {
+                    navigateToAuthenticated()
+                }
                 LoginViewModel.LoginEvent.BiometricCanceled -> {
                     //Do nothing besides showing login view
                 }
                 is LoginViewModel.LoginEvent.BiometricFailedError -> {
                     showError(R.string.fragment_login_biometric_failed)
+                }
+                LoginViewModel.LoginEvent.BiometricInvalidated -> {
+                    showError(R.string.fragment_login_biometric_invalid)
                 }
                 LoginViewModel.LoginEvent.KeyIsLocked -> {
                     showError(R.string.fragment_login_key_locked)

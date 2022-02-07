@@ -4,6 +4,7 @@
     <!-- fragment_login -->
     <string name="fragment_login_text_view_password">Login with password</string>
     <string name="fragment_login_biometric_failed">Biometric failed</string>
+    <string name="fragment_login_biometric_invalid">Biometric was changed and is therefore invalid, login again</string>
     <string name="fragment_login_wrong_password">Wrong password</string>
     <string name="fragment_login_key_server_error">Cannot reach the key server, do you have internet?</string>
     <string name="fragment_login_key_locked">Too many attempts, you have been locked out</string>

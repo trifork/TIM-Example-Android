@@ -24,6 +24,7 @@ class LoginViewModel @Inject constructor() : BaseViewModel<LoginViewModel.LoginE
         object KeyIsLocked : LoginEvent()
         class BiometricFailedError(val throwable: Throwable) : LoginEvent()
         object BiometricCanceled : LoginEvent()
+        object BiometricInvalidated : LoginEvent()
         object KeyServiceFailed : LoginEvent()
         object GenericError : LoginEvent()
         object NavigateToAuthenticated : LoginEvent()
@@ -55,9 +56,11 @@ class LoginViewModel @Inject constructor() : BaseViewModel<LoginViewModel.LoginE
         }
     }
 
-    fun loginBiometric(fragment: Fragment) = viewModelScope.launch {
-        val result = TIM.auth.loginWithBiometricId(this, _userId.value, fragment = fragment).await()
-        handleLoginResult(result)
+    fun loginBiometric(fragment: Fragment) = sendEventOnChannel {
+        viewModelScope.async {
+            val result = TIM.auth.loginWithBiometricId(this, _userId.value, fragment = fragment).await()
+            handleLoginResult(result)
+        }
     }
 
     private fun handleLoginResult(result: TIMResult<JWT, TIMError>): LoginEvent {
@@ -84,6 +87,8 @@ class LoginViewModel @Inject constructor() : BaseViewModel<LoginViewModel.LoginE
                         } else if (error.timStorageError.isBiometricFailedError()) {
                             // Handle biometric failed error
                             LoginEvent.BiometricFailedError(error)
+                        } else if (error.timStorageError.isBiometricAuthenticationInvalidated()) {
+                            LoginEvent.BiometricInvalidated
                         } else if (error.timStorageError.isBiometricCanceledError()) {
                             // Biometric canceled, do nothing
                             LoginEvent.BiometricCanceled

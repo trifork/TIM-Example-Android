@@ -25,6 +25,7 @@ class LoginViewModel @Inject constructor() : BaseViewModel<LoginViewModel.LoginE
         class BiometricFailedError(val throwable: Throwable) : LoginEvent()
         object BiometricCanceled : LoginEvent()
         object BiometricInvalidated : LoginEvent()
+        object BiometricUnrecoverable : LoginEvent()
         object KeyServiceFailed : LoginEvent()
         object GenericError : LoginEvent()
         object NavigateToAuthenticated : LoginEvent()
@@ -78,26 +79,38 @@ class LoginViewModel @Inject constructor() : BaseViewModel<LoginViewModel.LoginE
                         LoginEvent.GenericError
                     }
                     is TIMError.Storage -> {
-                        if (error.timStorageError.isKeyLocked()) {
-                            // Handle key locked (three wrong password logins)
-                            LoginEvent.KeyIsLocked
-                        } else if (error.timStorageError.isWrongPassword()) {
-                            // Handle wrong password
-                            LoginEvent.WrongPassword
-                        } else if (error.timStorageError.isBiometricFailedError()) {
-                            // Handle biometric failed error
-                            LoginEvent.BiometricFailedError(error)
-                        } else if (error.timStorageError.isBiometricAuthenticationInvalidated()) {
-                            LoginEvent.BiometricInvalidated
-                        } else if (error.timStorageError.isBiometricCanceledError()) {
-                            // Biometric canceled, do nothing
-                            LoginEvent.BiometricCanceled
-                        } else if (error.timStorageError.isKeyServiceError()) {
-                            // Something went wrong while communicating with the key service (possible network failure)
-                            LoginEvent.KeyServiceFailed
-                        } else {
-                            // Something failed - please try again.
-                            LoginEvent.GenericError
+                        when {
+                            error.timStorageError.isKeyLocked() -> {
+                                // Handle key locked (three wrong password logins)
+                                LoginEvent.KeyIsLocked
+                            }
+                            error.timStorageError.isWrongPassword() -> {
+                                // Handle wrong password
+                                LoginEvent.WrongPassword
+                            }
+                            error.timStorageError.isBiometricFailedError() -> {
+                                // Handle biometric failed error
+                                LoginEvent.BiometricFailedError(error)
+                            }
+                            error.timStorageError.isBiometricAuthenticationInvalidated() -> {
+                                //If the user made changes to fingerprint or faceid
+                                LoginEvent.BiometricInvalidated
+                            }
+                            error.timStorageError.isBiometricCanceledError() -> {
+                                // Biometric canceled, do nothing
+                                LoginEvent.BiometricCanceled
+                            }
+                            error.timStorageError.isKeyServiceError() -> {
+                                // Something went wrong while communicating with the key service (possible network failure)
+                                LoginEvent.KeyServiceFailed
+                            }
+                            error.timStorageError.isBiometricAuthenticationUnrecoverable() -> {
+                                LoginEvent.BiometricUnrecoverable
+                            }
+                            else -> {
+                                // Something failed - please try again.
+                                LoginEvent.GenericError
+                            }
                         }
                     }
                     else -> {

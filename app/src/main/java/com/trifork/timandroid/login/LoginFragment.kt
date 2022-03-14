@@ -104,6 +104,9 @@ class LoginFragment : BaseFragment() {
                 LoginViewModel.LoginEvent.GenericError -> {
                     showError(R.string.fragment_login_generic_error)
                 }
+                LoginViewModel.LoginEvent.BiometricUnrecoverable -> {
+                    showError(R.string.fragment_login_biometric_unrecoverable_invalid)
+                }
             }
         }
     }

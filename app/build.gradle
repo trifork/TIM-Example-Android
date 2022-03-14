@@ -46,16 +46,17 @@ android {
 
 dependencies {
     //region TIM
-    debugImplementation "com.github.trifork:TIM-Android:1.1.0"
-    releaseImplementation "com.github.trifork:TIM-Android:1.1.0"
+    debugImplementation "com.github.trifork:TIM-Android:1.1.1"
+    releaseImplementation "com.github.trifork:TIM-Android:1.1.1"
     developmentImplementation project(':TIM-Android')
     //endregion
 
     //region coroutines and lifecycle
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+    def lifecycle_version = "2.4.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     //endregion
 
 
@@ -65,7 +66,7 @@ dependencies {
     //endregion
 
     //region ui
-    def nav_version = "2.3.5"
+    def nav_version = "2.4.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     //endregion

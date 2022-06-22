@@ -46,8 +46,8 @@ android {
 
 dependencies {
     //region TIM
-    debugImplementation "com.github.trifork:TIM-Android:1.1.1"
-    releaseImplementation "com.github.trifork:TIM-Android:1.1.1"
+    debugImplementation "com.github.trifork:TIM-Android:1.5.0"
+    releaseImplementation "com.github.trifork:TIM-Android:1.5.0"
     developmentImplementation project(':TIM-Android')
     //endregion
 

@@ -24,14 +24,12 @@ class MainActivity : AppCompatActivity() {
 
         TIM.auth.enableBackgroundTimeout {
             Log.d(TAG, "Background timeout triggered")
-            dialogBuilder().show()
+            createExpiredDialog().show()
         }
     }
 
-    private fun dialogBuilder(): AlertDialog {
-        val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
-        }
+    private fun createExpiredDialog(): AlertDialog {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
 
         builder
             .setCancelable(false)

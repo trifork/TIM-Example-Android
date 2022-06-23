@@ -1,27 +1,30 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext {
+        hilt_version = "2.42"
+        kotlin_version = '1.7.0'
+        nav_version = "2.3.5"
+    }
+
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:7.0.4"
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
+        classpath "com.android.tools.build:gradle:7.2.1"
+        //https://dagger.dev/hilt/gradle-setup / https://github.com/google/dagger / https://mvnrepository.com/artifact/com.google.dagger/hilt-android-gradle-plugin
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
 
-        def nav_version = "2.3.5"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
 
-        ext.kotlin_version = '1.6.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         //Added in order to get local include of TIM dependency to compile, only necessary because of development setup with TIM
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

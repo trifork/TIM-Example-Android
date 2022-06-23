@@ -26,7 +26,7 @@ fun configureTIM(context: Context): TIM {
         .description("My description")
         .build()
 
-    TIM.configure(timConfiguration, context = context, timBiometricUtil = timBiometricUtil)
+    TIM.configure(timConfiguration, context = context, timBiometricData = timBiometricUtil)
 
     return TIM
 }

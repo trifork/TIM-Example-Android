@@ -1,6 +1,7 @@
 package com.trifork.timandroid.welcome
 
 import android.content.Intent
+import android.util.*
 import androidx.lifecycle.viewModelScope
 import com.trifork.timandroid.TIM
 import com.trifork.timandroid.helpers.BaseViewModel
@@ -28,6 +29,7 @@ class WelcomeViewModel @Inject constructor() : BaseViewModel<WelcomeViewModel.We
                     WelcomeEvent.ResultLauncher(intentResult.value)
                 }
                 is TIMResult.Failure -> {
+                    Log.e(TAG, "Failed with", intentResult.error)
                     WelcomeEvent.ResultLauncherError
                 }
             }
@@ -40,8 +42,15 @@ class WelcomeViewModel @Inject constructor() : BaseViewModel<WelcomeViewModel.We
 
             when (loginResult) {
                 is TIMResult.Success -> WelcomeEvent.HandledLoginResult
-                is TIMResult.Failure -> WelcomeEvent.HandledLoginResultFailure
+                is TIMResult.Failure -> {
+                    Log.e(TAG, "Failed with", loginResult.error)
+                    WelcomeEvent.HandledLoginResultFailure
+                }
             }
         }
+    }
+
+    companion object {
+        val TAG = WelcomeViewModel::class.simpleName
     }
 }
